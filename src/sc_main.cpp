@@ -52,44 +52,48 @@ int sc_main(int argc, char* argv[]) {
 
     // Define interconnect
     
-    sc_signal < bool       > rst_n            ; 
-    sc_signal < bool       > ifu_req_addr_vld ; 
-    sc_signal < vluint64_t > ifu_req_addr     ; 
-    sc_signal < bool       > ifu_req_data_vld ; 
-    sc_signal < vluint64_t > ifu_req_data     ; 
-    sc_signal < vluint64_t > lsu_addr         ; 
-    sc_signal < vluint64_t > lsu_data_i       ; 
-    sc_signal < vluint64_t > lsu_data_o       ; 
-    sc_signal < uint32_t   > lsu_data_strobe  ; 
-    sc_signal < bool       > commit_vld       ; 
-    sc_signal < vluint64_t > commit_pc        ; 
-    sc_signal < uint32_t   > commit_inst      ; 
-    sc_signal < vluint64_t > commit_rs1       ; 
-    sc_signal < vluint64_t > commit_rs2       ; 
-    sc_signal < vluint64_t > commit_rd        ; 
-    sc_signal < bool       > commit_we        ; 
+    sc_signal < bool       > rst_n               ; 
+    sc_signal < bool       > ifu_req_addr_vld    ; 
+    sc_signal < vluint64_t > ifu_req_addr        ; 
+    sc_signal < bool       > ifu_rsp_data_vld    ; 
+    sc_signal < vluint64_t > ifu_rsp_data        ; 
+    sc_signal < bool       > lsu_req_vld         ; 
+    sc_signal < vluint64_t > lsu_req_addr        ; 
+    sc_signal < vluint64_t > lsu_req_data        ; 
+    sc_signal < uint32_t   > lsu_req_data_strobe ; 
+    sc_signal < bool       > lsu_rsp_vld         ; 
+    sc_signal < vluint64_t > lsu_rsp_data        ; 
+    sc_signal < bool       > commit_vld          ; 
+    sc_signal < vluint64_t > commit_pc           ; 
+    sc_signal < uint32_t   > commit_inst         ; 
+    sc_signal < vluint64_t > commit_rs1          ; 
+    sc_signal < vluint64_t > commit_rs2          ; 
+    sc_signal < vluint64_t > commit_rd           ; 
+    sc_signal < bool       > commit_we           ; 
 
 
     // Construct the Verilated model, from inside Vtop.h
     Vcpu_define* top = new Vcpu_define("top");
     // Attach signals to the model
-    top->clk              ( clk              ); 
-    top->rst_n            ( rst_n            ); 
-    top->ifu_req_addr_vld ( ifu_req_addr_vld ); 
-    top->ifu_req_addr     ( ifu_req_addr     ); 
-    top->ifu_req_data_vld ( ifu_req_data_vld ); 
-    top->ifu_req_data     ( ifu_req_data     ); 
-    top->lsu_addr         ( lsu_addr         ); 
-    top->lsu_data_i       ( lsu_data_i       ); 
-    top->lsu_data_o       ( lsu_data_o       ); 
-    top->lsu_data_strobe  ( lsu_data_strobe  ); 
-    top->commit_vld       ( commit_vld       ); 
-    top->commit_pc        ( commit_pc        ); 
-    top->commit_inst      ( commit_inst      ); 
-    top->commit_rs1       ( commit_rs1       ); 
-    top->commit_rs2       ( commit_rs2       ); 
-    top->commit_rd        ( commit_rd        ); 
-    top->commit_we        ( commit_we        ); 
+    top->clk                 ( clk                 ); 
+    top->rst_n               ( rst_n               ); 
+    top->ifu_req_addr_vld    ( ifu_req_addr_vld    ); 
+    top->ifu_req_addr        ( ifu_req_addr        ); 
+    top->ifu_rsp_data_vld    ( ifu_rsp_data_vld    ); 
+    top->ifu_rsp_data        ( ifu_rsp_data        ); 
+    top->lsu_req_vld         ( lsu_req_vld         ); 
+    top->lsu_req_addr        ( lsu_req_addr        ); 
+    top->lsu_req_data        ( lsu_req_data        ); 
+    top->lsu_req_data_strobe ( lsu_req_data_strobe ); 
+    top->lsu_rsp_vld         ( lsu_rsp_vld         ); 
+    top->lsu_rsp_data        ( lsu_rsp_data        ); 
+    top->commit_vld          ( commit_vld          ); 
+    top->commit_pc           ( commit_pc           ); 
+    top->commit_inst         ( commit_inst         ); 
+    top->commit_rs1          ( commit_rs1          ); 
+    top->commit_rs2          ( commit_rs2          ); 
+    top->commit_rd           ( commit_rd           ); 
+    top->commit_we           ( commit_we           ); 
     
 
 #if VM_TRACE

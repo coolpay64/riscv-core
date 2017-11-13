@@ -6,8 +6,8 @@ module ifu_dummy (
   input  logic rst_n,
   output logic                   ifu_req_addr_vld , 
   output logic[ADDR_WIDTH-1:0]   ifu_req_addr     , 
-  input  logic                   ifu_req_data_vld , 
-  input  logic[DATA_WIDTH-1:0]   ifu_req_data     , 
+  input  logic                   ifu_rsp_data_vld , 
+  input  logic[DATA_WIDTH-1:0]   ifu_rsp_data     , 
   output logic                   ifu_valid        , 
   output logic[PC_WIDTH-1   : 0] ifu_pc           , 
   output logic[INST_WIDTH-1 : 0] ifu_inst   
@@ -34,8 +34,8 @@ module ifu_dummy (
   // Disable the Unused signal wraning
   //==============================
   initial begin : warning_killer
-    if(0 & &ifu_req_data_vld  );
-    if(0 & &ifu_req_data      );
+    if(0 & &ifu_rsp_data_vld  );
+    if(0 & &ifu_rsp_data      );
   end
 
 
