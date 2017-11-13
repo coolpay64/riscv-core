@@ -26,9 +26,19 @@ module core_top (
 
 );
 
+  // IFU Output
   logic                   ifu_valid; 
   logic[PC_WIDTH-1   : 0] ifu_pc   ; 
   logic[INST_WIDTH-1 : 0] ifu_inst ; 
+ 
+  // DEC Output
+  logic                   dec_valid  ; 
+  logic[IMM_WIDTH-1  : 0] dec_imm    ; 
+  logic                   dec_req_alu;
+  logic                   dec_req_mdu;
+  logic                   dec_req_lsu;
+  logic                   dec_req_csr;
+
 
   assign lsu_req_vld         = 0 ; 
   assign lsu_req_addr        = 0 ; 
@@ -57,8 +67,18 @@ module core_top (
     .ifu_pc           (ifu_pc           ), 
     .ifu_inst         (ifu_inst         )
   );
+  dec_dummy  dec_dummy (
+    .clk(clk),.rst_n(rst_n),
+    .ifu_valid   ( ifu_valid   ), 
+    .ifu_inst    ( ifu_inst    ), 
+    .dec_valid   ( dec_valid   ), 
+    .dec_imm     ( dec_imm     ), 
+    .dec_req_alu ( dec_req_alu ), 
+    .dec_req_mdu ( dec_req_mdu ), 
+    .dec_req_lsu ( dec_req_lsu ), 
+    .dec_req_csr ( dec_req_csr )  
+  );
   rf_dummy   rf_dummy  (.clk(clk),.rst_n(rst_n));
-  dec_dummy  dec_dummy (.clk(clk),.rst_n(rst_n));
   alu_dummy  alu_dummy (.clk(clk),.rst_n(rst_n));
   mdu_dummy  mdu_dummy (.clk(clk),.rst_n(rst_n));
   lsu_dummy  lsu_dummy (.clk(clk),.rst_n(rst_n));
@@ -69,9 +89,13 @@ module core_top (
   // Disable the Unused signal wraning
   //==============================
   initial begin : warning_killer
-    if(0 & &ifu_valid    ); 
     if(0 & &ifu_pc       ); 
-    if(0 & &ifu_inst     ); 
+    if(0 & &dec_valid    ); 
+    if(0 & &dec_req_alu  ); 
+    if(0 & &dec_req_mdu  ); 
+    if(0 & &dec_req_lsu  ); 
+    if(0 & &dec_req_csr  ); 
+    if(0 & &dec_imm      ); 
     if(0 & &lsu_rsp_vld  ); 
     if(0 & &lsu_rsp_data ); 
   end
