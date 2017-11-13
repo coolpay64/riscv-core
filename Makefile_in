@@ -3,6 +3,15 @@
 FILE_VERILOG = 
 FILE_VERILOG += src/cpu_define.sv
 FILE_VERILOG += src/core_top.sv
+FILE_VERILOG += src-dummy/alu_dummy.sv
+FILE_VERILOG += src-dummy/csr_dummy.sv
+FILE_VERILOG += src-dummy/ctrl_dummy.sv
+FILE_VERILOG += src-dummy/dec_dummy.sv
+FILE_VERILOG += src-dummy/ifu_dummy.sv
+FILE_VERILOG += src-dummy/lsu_dummy.sv
+FILE_VERILOG += src-dummy/mdu_dummy.sv
+FILE_VERILOG += src-dummy/rf_dummy.sv
+FILE_VERILOG += src-dummy/wb_dummy.sv
 FILE_CPP     = 
 FILE_CPP     += src/sc_main.cpp
 ######################################################################
