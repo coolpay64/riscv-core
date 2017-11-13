@@ -1,0 +1,9 @@
+######################################################################
+# File list
+FILE_VERILOG = 
+FILE_VERILOG += src/cpu_define.sv
+FILE_VERILOG += src/core_top.sv
+FILE_CPP     = 
+FILE_CPP     += src/sc_main.cpp
+######################################################################
+
