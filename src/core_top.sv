@@ -27,19 +27,28 @@ module core_top (
 );
 
   // IFU Output
-  logic                   ifu_valid; 
+  logic                   ifu_vld  ; 
   logic[PC_WIDTH-1   : 0] ifu_pc   ; 
   logic[INST_WIDTH-1 : 0] ifu_inst ; 
  
   // DEC Output
-  logic                   dec_valid  ; 
+  logic                   dec_vld    ; 
   logic[IMM_WIDTH-1  : 0] dec_imm    ; 
   logic                   dec_req_alu;
   logic                   dec_req_mdu;
   logic                   dec_req_lsu;
   logic                   dec_req_csr;
 
-
+  // ALU Output
+  logic                          alu_vld          ; 
+  logic                          alu_rd_we        ; 
+  logic [ REG_ADDR_WIDTH-1 : 0 ] alu_rd_addr      ; 
+  logic [ REG_WIDTH-1      : 0 ] alu_rd           ; 
+  logic                          alu_branch       ; 
+  logic                          alu_branch_cond  ; 
+  logic                          alu_branch_taken ; 
+  logic [ PC_WIDTH-1       : 0 ] alu_branch_pc    ; 
+    
   assign lsu_req_vld         = 0 ; 
   assign lsu_req_addr        = 0 ; 
   assign lsu_req_data        = 0 ; 
@@ -59,27 +68,55 @@ module core_top (
   ctrl_dummy ctrl_dummy(.clk(clk),.rst_n(rst_n));
   ifu_dummy  ifu_dummy (
     .clk(clk),.rst_n(rst_n),
-    .ifu_req_addr_vld (ifu_req_addr_vld ), 
-    .ifu_req_addr     (ifu_req_addr     ), 
-    .ifu_rsp_data_vld (ifu_rsp_data_vld ), 
-    .ifu_rsp_data     (ifu_rsp_data     ), 
-    .ifu_valid        (ifu_valid        ), 
-    .ifu_pc           (ifu_pc           ), 
-    .ifu_inst         (ifu_inst         )
+    .ifu_req_addr_vld ( ifu_req_addr_vld   ), 
+    .ifu_req_addr     ( ifu_req_addr       ), 
+    .ifu_rsp_data_vld ( ifu_rsp_data_vld   ), 
+    .ifu_rsp_data     ( ifu_rsp_data       ), 
+    .ifu_vld          ( ifu_vld            ), 
+    .ifu_pc           ( ifu_pc             ), 
+    .ifu_inst         ( ifu_inst           )
   );
   dec_dummy  dec_dummy (
     .clk(clk),.rst_n(rst_n),
-    .ifu_valid   ( ifu_valid   ), 
-    .ifu_inst    ( ifu_inst    ), 
-    .dec_valid   ( dec_valid   ), 
-    .dec_imm     ( dec_imm     ), 
-    .dec_req_alu ( dec_req_alu ), 
-    .dec_req_mdu ( dec_req_mdu ), 
-    .dec_req_lsu ( dec_req_lsu ), 
-    .dec_req_csr ( dec_req_csr )  
+    .ifu_vld     ( ifu_vld       ), 
+    .ifu_inst    ( ifu_inst      ), 
+    .dec_vld     ( dec_vld       ), 
+    .dec_imm     ( dec_imm       ), 
+    .dec_req_alu ( dec_req_alu   ), 
+    .dec_req_mdu ( dec_req_mdu   ), 
+    .dec_req_lsu ( dec_req_lsu   ), 
+    .dec_req_csr ( dec_req_csr   )
   );
   rf_dummy   rf_dummy  (.clk(clk),.rst_n(rst_n));
-  alu_dummy  alu_dummy (.clk(clk),.rst_n(rst_n));
+  alu_dummy  alu_dummy (
+    .clk(clk),.rst_n(rst_n),
+    .dec_vld    (dec_vld    ),
+    .dec_req_alu(dec_req_alu),
+
+    // Data Flow input
+    .rf_rs1_addr (0), 
+    .rf_rs2_addr (0), 
+    .rf_rd_addr  (0), 
+    .rf_rs1      (0), 
+    .rf_rs2      (0), 
+    .rf_pc       (0), 
+    .dec_imm     (dec_imm), 
+
+    // OP Code
+
+    // Data Flow Output
+    .alu_vld      (alu_vld      ), 
+    .alu_rd_we    (alu_rd_we    ), 
+    .alu_rd_addr  (alu_rd_addr  ), 
+    .alu_rd       (alu_rd       ), 
+
+    // Branching
+    .alu_branch         (alu_branch         ), 
+    .alu_branch_cond    (alu_branch_cond    ), 
+    .alu_branch_taken   (alu_branch_taken   ), 
+    .alu_branch_pc      (alu_branch_pc      ) 
+
+  );
   mdu_dummy  mdu_dummy (.clk(clk),.rst_n(rst_n));
   lsu_dummy  lsu_dummy (.clk(clk),.rst_n(rst_n));
   csr_dummy  csr_dummy (.clk(clk),.rst_n(rst_n));
@@ -90,7 +127,7 @@ module core_top (
   //==============================
   initial begin : warning_killer
     if(0 & &ifu_pc       ); 
-    if(0 & &dec_valid    ); 
+    if(0 & &dec_vld    ); 
     if(0 & &dec_req_alu  ); 
     if(0 & &dec_req_mdu  ); 
     if(0 & &dec_req_lsu  ); 
@@ -98,6 +135,14 @@ module core_top (
     if(0 & &dec_imm      ); 
     if(0 & &lsu_rsp_vld  ); 
     if(0 & &lsu_rsp_data ); 
+    if(0 & &alu_vld         ); 
+    if(0 & &alu_rd_we       ); 
+    if(0 & &alu_rd_addr     ); 
+    if(0 & &alu_rd          ); 
+    if(0 & &alu_branch      ); 
+    if(0 & &alu_branch_cond ); 
+    if(0 & &alu_branch_taken); 
+    if(0 & &alu_branch_pc   ); 
   end
 
 

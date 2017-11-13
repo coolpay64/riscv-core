@@ -1,9 +1,9 @@
 module dec_dummy(
   input  logic clk,
   input  logic rst_n,
-  input  logic                   ifu_valid, 
+  input  logic                   ifu_vld  , 
   input  logic[INST_WIDTH-1 : 0] ifu_inst , 
-  output logic                   dec_valid, 
+  output logic                   dec_vld  , 
   output logic[IMM_WIDTH-1  : 0] dec_imm  ,
   output logic                   dec_req_alu,
   output logic                   dec_req_mdu,
@@ -50,7 +50,7 @@ module dec_dummy(
   always_comb  imm_type_j = 1'b0;
 
   always_ff @ (posedge clk)begin : imm_decode_output
-    if(ifu_valid)begin
+    if(ifu_vld)begin
       dec_imm <=
         (imm_type_i ? imm_i : {IMM_WIDTH{1'h0}}) |
         (imm_type_s ? imm_s : {IMM_WIDTH{1'h0}}) |
@@ -65,9 +65,9 @@ module dec_dummy(
   //==============================
   always_ff @ (posedge clk or negedge rst_n)begin : status_pipe
     if(!rst_n)begin
-      dec_valid <= 0;
+      dec_vld <= 0;
     end else begin
-      dec_valid <= ifu_valid;
+      dec_vld <= ifu_vld;
     end
   end
 

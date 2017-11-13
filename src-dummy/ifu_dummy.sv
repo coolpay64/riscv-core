@@ -8,19 +8,19 @@ module ifu_dummy (
   output logic[ADDR_WIDTH-1:0]   ifu_req_addr     , 
   input  logic                   ifu_rsp_data_vld , 
   input  logic[DATA_WIDTH-1:0]   ifu_rsp_data     , 
-  output logic                   ifu_valid        , 
+  output logic                   ifu_vld          , 
   output logic[PC_WIDTH-1   : 0] ifu_pc           , 
   output logic[INST_WIDTH-1 : 0] ifu_inst   
 
 );
   always_ff @ (posedge clk or negedge rst_n)begin : dummy_generation
     if(!rst_n)begin
-      ifu_valid <= 0;
-      ifu_pc    <= 0;
+      ifu_vld <= 0;
+      ifu_pc  <= 0;
     end else begin
-      ifu_valid <= 1;
-      ifu_pc    <= ifu_pc+1;
-      ifu_inst  <= 'h00000023; // ADDI 0 to r0
+      ifu_vld  <= 1;
+      ifu_pc   <= ifu_pc+1;
+      ifu_inst <= 'h00000023; // ADDI 0 to r0
     end
   end
  
