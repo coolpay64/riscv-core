@@ -147,7 +147,17 @@ module core_top (
   mdu_dummy  mdu_dummy (.clk(clk),.rst_n(rst_n));
   lsu_dummy  lsu_dummy (.clk(clk),.rst_n(rst_n));
   csr_dummy  csr_dummy (.clk(clk),.rst_n(rst_n));
-  wb_dummy   wb_dummy  (.clk(clk),.rst_n(rst_n));
+  wb_dummy   wb_dummy  (
+    .clk(clk),.rst_n(rst_n),
+    .alu_vld     (alu_vld     ), 
+    .alu_rd_we   (alu_rd_we   ), 
+    .alu_rd_addr (alu_rd_addr ), 
+    .alu_rd      (alu_rd      ), 
+    .rf_rd_we    (rf_rd_we    ), 
+    .rf_rd_addr  (rf_rd_addr  ), 
+    .rf_rd       (rf_rd       )  
+
+  );
 
   //==============================
   // Disable the Unused signal wraning
@@ -165,9 +175,6 @@ module core_top (
     if(0 & &lsu_rsp_vld      ); 
     if(0 & &lsu_rsp_data     ); 
     if(0 & &alu_vld          ); 
-    if(0 & &alu_rd_we        ); 
-    if(0 & &alu_rd_addr      ); 
-    if(0 & &alu_rd           ); 
     if(0 & &alu_branch       ); 
     if(0 & &alu_branch_cond  ); 
     if(0 & &alu_branch_taken ); 
