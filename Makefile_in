@@ -12,6 +12,7 @@ FILE_VERILOG += src-dummy/lsu_dummy.sv
 FILE_VERILOG += src-dummy/mdu_dummy.sv
 FILE_VERILOG += src-dummy/rf_dummy.sv
 FILE_VERILOG += src-dummy/wb_dummy.sv
+FILE_VERILOG += src-dummy/bypass_dummy.sv
 FILE_CPP     = 
 FILE_CPP     += src/sc_main.cpp
 ######################################################################

@@ -39,6 +39,16 @@ module core_top (
   logic                   dec_req_lsu;
   logic                   dec_req_csr;
 
+  // RF Signal
+  logic [ REG_ADDR_WIDTH-1 : 0 ] rf_rs1_addr ; 
+  logic [ REG_ADDR_WIDTH-1 : 0 ] rf_rs2_addr ; 
+  logic [ REG_WIDTH-1      : 0 ] rf_rs1      ; 
+  logic [ REG_WIDTH-1      : 0 ] rf_rs2      ; 
+  logic                          rf_rd_we    ; 
+  logic [ REG_ADDR_WIDTH-1 : 0 ] rf_rd_addr  ; 
+  logic [ REG_WIDTH -1     : 0 ] rf_rd       ; 
+  logic [ PC_WIDTH-1       : 0 ] rf_pc       ; 
+
   // ALU Output
   logic                          alu_vld          ; 
   logic                          alu_rd_we        ; 
@@ -61,6 +71,11 @@ module core_top (
   assign commit_rd           = 0 ; 
   assign commit_we           = 0 ; 
 
+  assign rf_rs1_addr = ifu_inst[19:15];
+  assign rf_rs2_addr = ifu_inst[24:20];
+  assign rf_rd_we    = 0; // FIXME: get we from wb stage
+  assign rf_rd_addr  = 0; // FIXME: get addr from wb stage
+  assign rf_rd       = 0; // FIXME: get data from wb stage
 
   //==============================
   // Dummy Components
@@ -76,6 +91,7 @@ module core_top (
     .ifu_pc           ( ifu_pc             ), 
     .ifu_inst         ( ifu_inst           )
   );
+  bypass_dummy bypass_dummy(.clk(clk),.rst_n(rst_n));
   dec_dummy  dec_dummy (
     .clk(clk),.rst_n(rst_n),
     .ifu_vld     ( ifu_vld       ), 
@@ -87,7 +103,18 @@ module core_top (
     .dec_req_lsu ( dec_req_lsu   ), 
     .dec_req_csr ( dec_req_csr   )
   );
-  rf_dummy   rf_dummy  (.clk(clk),.rst_n(rst_n));
+  rf_dummy   rf_dummy  (
+    .clk(clk),.rst_n(rst_n),
+    .rf_rs1_addr(rf_rs1_addr),
+    .rf_rs2_addr(rf_rs2_addr),
+    .rf_rs1     (rf_rs1     ),
+    .rf_rs2     (rf_rs2     ),
+    .rf_rd_we   (rf_rd_we   ),
+    .rf_rd_addr (rf_rd_addr ),
+    .rf_rd      (rf_rd      ),
+    .ifu_pc     (ifu_pc     ),
+    .rf_pc      (rf_pc      ) 
+  );
   alu_dummy  alu_dummy (
     .clk(clk),.rst_n(rst_n),
     .dec_vld    (dec_vld    ),
@@ -126,23 +153,25 @@ module core_top (
   // Disable the Unused signal wraning
   //==============================
   initial begin : warning_killer
-    if(0 & &ifu_pc       ); 
-    if(0 & &dec_vld    ); 
-    if(0 & &dec_req_alu  ); 
-    if(0 & &dec_req_mdu  ); 
-    if(0 & &dec_req_lsu  ); 
-    if(0 & &dec_req_csr  ); 
-    if(0 & &dec_imm      ); 
-    if(0 & &lsu_rsp_vld  ); 
-    if(0 & &lsu_rsp_data ); 
-    if(0 & &alu_vld         ); 
-    if(0 & &alu_rd_we       ); 
-    if(0 & &alu_rd_addr     ); 
-    if(0 & &alu_rd          ); 
-    if(0 & &alu_branch      ); 
-    if(0 & &alu_branch_cond ); 
-    if(0 & &alu_branch_taken); 
-    if(0 & &alu_branch_pc   ); 
+    if(0 & &rf_rs1           ); 
+    if(0 & &rf_rs2           ); 
+    if(0 & &rf_pc            ); 
+    if(0 & &dec_vld          ); 
+    if(0 & &dec_req_alu      ); 
+    if(0 & &dec_req_mdu      ); 
+    if(0 & &dec_req_lsu      ); 
+    if(0 & &dec_req_csr      ); 
+    if(0 & &dec_imm          ); 
+    if(0 & &lsu_rsp_vld      ); 
+    if(0 & &lsu_rsp_data     ); 
+    if(0 & &alu_vld          ); 
+    if(0 & &alu_rd_we        ); 
+    if(0 & &alu_rd_addr      ); 
+    if(0 & &alu_rd           ); 
+    if(0 & &alu_branch       ); 
+    if(0 & &alu_branch_cond  ); 
+    if(0 & &alu_branch_taken ); 
+    if(0 & &alu_branch_pc    ); 
   end
 
 
